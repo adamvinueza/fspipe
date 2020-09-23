@@ -30,7 +30,8 @@ def S3FS(profile_name: Optional[str] = None) -> AbstractFileSystem:
 
 
 def LocalFS() -> AbstractFileSystem:
-    return LocalFileSystem()
+    fs = LocalFileSystem()
+    return fs
 
 
 def SFTPFS(host: str,
