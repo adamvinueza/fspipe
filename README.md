@@ -43,7 +43,7 @@ import gzip
 
 pipe = Pipe(src_fs=S3FS(), dest_fs=LocalFS())
 src_file = 's3://mybucket/myfile.gz'
-dest_file = 'mybucket_reversed.txt'
+dest_file = 'myfile.txt'
 
 # gzip.decompress takes a bytes object and returns a bytes object
 pipe.fcopy(src_file, dest_file, gzip.decompress)
