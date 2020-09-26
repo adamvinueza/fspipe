@@ -25,7 +25,7 @@ def S3FS(profile_name: Optional[str] = None) -> AbstractFileSystem:
             secret=aws_secret_access_key,
             token=aws_session_token
         )
-    # No profile was specified, so use AWS default credentials.
+    # No profile was specified; AWS default credentials.
     return S3FileSystem()
 
 
