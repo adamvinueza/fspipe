@@ -1,5 +1,5 @@
 from unittest.mock import mock_open, patch
-from fspipe.pipe import Pipe
+from fspipe import Pipe
 
 
 class TestPipe:
