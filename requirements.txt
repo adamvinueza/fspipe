@@ -1,3 +1,4 @@
-fsspec==0.8.0
-pre-commit==2.7.1
-s3fs==0.5.1
+fsspec
+pre-commit
+s3fs
+paramiko
