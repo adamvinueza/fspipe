@@ -27,8 +27,7 @@ pip install fspipe
 
 Upload a file to S3:
 ```
-from fspipe import Pipe
-from fspipe.fs import LocalFS, S3FS
+from fspipe import Pipe, LocalFS, S3FS
 
 pipe = Pipe(src_fs=LocalFS(), dest_fs=S3FS())
 pipe.copy('/path/to/myfile.txt', 's3://my_bucket/myfile.txt')
@@ -36,8 +35,7 @@ pipe.copy('/path/to/myfile.txt', 's3://my_bucket/myfile.txt')
 
 Download a gzipped file from S3 and decompress it to your local file system:
 ```
-from fspipe import Pipe
-from fspipe.fs import LocalFS, S3FS
+from fspipe import Pipe, LocalFS, S3FS
 import gzip
 
 
