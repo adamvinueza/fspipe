@@ -10,7 +10,7 @@ setup(
     license='MIT',
     packages=['fspipe'],
     install_requires=[
-        'fsspec==0.8.0',
+        'fsspec==0.8.3',
         'mypy-extensions==0.4.3',
         's3fs==0.5.1',
         'paramiko==2.7.2'

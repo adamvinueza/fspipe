@@ -1,4 +1,4 @@
-flake8
-mypy
-mypy-extensions
-pytest
+flake8==3.8.3
+mypy==0.782
+mypy-extensions==0.4.3
+pytest==6.1.0
