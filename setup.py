@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='fspipe',
-    version='0.2.0',
+    version='0.3.0',
     description='Library for transforming data via streaming files',
     url='http://github.com/adamvinueza/fspipe',
     author='Adam Vinueza',
