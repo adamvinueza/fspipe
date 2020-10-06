@@ -13,6 +13,22 @@ class Pipe(object):
     src_fs: AbstractFileSystem
     dest_fs: AbstractFileSystem
 
+    min_s3_block_size = 5242880
+
+    @staticmethod
+    def _get_block_size(buffer_size, fs, filepath):
+        """Instead of checking for an S3 file system, just be mindful of the S3
+        minimum block size.
+        """
+        if buffer_size < 0:
+            # block size is the file size unless min block size is bigger
+            file_size = fs.size(filepath)
+            block_size = max(file_size, Pipe.min_s3_block_size)
+        else:
+            # block size is buffer size unless min block size is bigger
+            block_size = max(buffer_size, Pipe.min_s3_block_size)
+        return block_size
+
     def __init__(self, src_fs: Optional[AbstractFileSystem] = None,
                  dest_fs: Optional[AbstractFileSystem] = None):
         if src_fs is None and dest_fs is None:
@@ -31,8 +47,9 @@ class Pipe(object):
 
         Both src and dest paths must be valid in the respective file systems.
         """
-        with self.src_fs.open(src, readmode, bufsize) as rdr:
-            with self.dest_fs.open(dest, writemode, bufsize) as wr:
+        block_size = Pipe._get_block_size(bufsize, self.src_fs, src)
+        with self.src_fs.open(src, readmode, block_size) as rdr:
+            with self.dest_fs.open(dest, writemode, block_size) as wr:
                 wr.write(rdr.read())
 
     def fcopy(self, src: str, dest: str, fltr: Callable, readmode: str = 'rb',
@@ -44,8 +61,9 @@ class Pipe(object):
 
         Both src and dest paths must be valid in the respective file systems.
         """
-        with self.src_fs.open(src, readmode, bufsize) as rdr:
-            with self.dest_fs.open(dest, writemode, bufsize) as wr:
+        block_size = Pipe._get_block_size(bufsize, self.src_fs, src)
+        with self.src_fs.open(src, readmode, block_size) as rdr:
+            with self.dest_fs.open(dest, writemode, block_size) as wr:
                 while True:
                     b = rdr.read(bufsize)
                     if not b:

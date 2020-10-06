@@ -46,15 +46,20 @@ class TestPipe:
         src = 'src'
         dest = 'dest'
 
+        mock_read.size = lambda x: 0
+        mock_write.size = lambda x: 0
+
         tr = Pipe(src_fs=mock_read, dest_fs=mock_write)
         tr.copy(src, dest)
 
         # reading is binary
-        mock_fs_ropen.assert_called_once_with(src, 'rb', -1)
+        mock_fs_ropen.assert_called_once_with(src, 'rb',
+                                              Pipe.min_s3_block_size)
         mock_reader.read.assert_called_once()
 
         # writing is binary
-        mock_write.open.assert_called_once_with(dest, 'wb', -1)
+        mock_write.open.assert_called_once_with(dest, 'wb',
+                                                Pipe.min_s3_block_size)
         mock_writer.write.assert_called_once_with('data')
 
     @patch('fsspec.implementations.local.LocalFileSystem')
@@ -75,6 +80,10 @@ class TestPipe:
         src = 'src'
         dest = 'dest'
 
+        bufsize = Pipe.min_s3_block_size + 1
+        mock_read.size = lambda x: bufsize
+        mock_write.size = lambda x: bufsize
+
         tr = Pipe(src_fs=mock_read, dest_fs=mock_write)
         tr.fcopy(src,
                  dest,
@@ -83,9 +92,9 @@ class TestPipe:
                  second='cat')
 
         # reading is binary
-        mock_fs_ropen.assert_called_once_with(src, 'rb', -1)
+        mock_fs_ropen.assert_called_once_with(src, 'rb', bufsize)
         assert(2 == mock_reader.read.call_count)
 
         # writing is binary
-        mock_write.open.assert_called_once_with(dest, 'wb', -1)
+        mock_write.open.assert_called_once_with(dest, 'wb', bufsize)
         mock_writer.write.assert_called_once_with(b'animaldogcat')
