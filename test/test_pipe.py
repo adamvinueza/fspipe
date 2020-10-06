@@ -54,12 +54,12 @@ class TestPipe:
 
         # reading is binary
         mock_fs_ropen.assert_called_once_with(src, 'rb',
-                                              Pipe.min_s3_block_size)
+                                              Pipe.min_s3_blocksize)
         mock_reader.read.assert_called_once()
 
         # writing is binary
         mock_write.open.assert_called_once_with(dest, 'wb',
-                                                Pipe.min_s3_block_size)
+                                                Pipe.min_s3_blocksize)
         mock_writer.write.assert_called_once_with('data')
 
     @patch('fsspec.implementations.local.LocalFileSystem')
@@ -80,7 +80,7 @@ class TestPipe:
         src = 'src'
         dest = 'dest'
 
-        bufsize = Pipe.min_s3_block_size + 1
+        bufsize = Pipe.min_s3_blocksize + 1
         mock_read.size = lambda x: bufsize
         mock_write.size = lambda x: bufsize
 

@@ -13,21 +13,21 @@ class Pipe(object):
     src_fs: AbstractFileSystem
     dest_fs: AbstractFileSystem
 
-    min_s3_block_size = 5242880
+    min_s3_blocksize: int = 5242880
 
     @staticmethod
-    def _get_block_size(buffer_size, fs, filepath):
+    def _get_block_size(bufsize: int, fs: AbstractFileSystem, filepath: str):
         """Instead of checking for an S3 file system, just be mindful of the S3
         minimum block size.
         """
-        if buffer_size < 0:
+        if bufsize < 0:
             # block size is the file size unless min block size is bigger
-            file_size = fs.size(filepath)
-            block_size = max(file_size, Pipe.min_s3_block_size)
+            filesize = fs.size(filepath)
+            blocksize = max(filesize, Pipe.min_s3_blocksize)
         else:
             # block size is buffer size unless min block size is bigger
-            block_size = max(buffer_size, Pipe.min_s3_block_size)
-        return block_size
+            blocksize = max(bufsize, Pipe.min_s3_blocksize)
+        return blocksize
 
     def __init__(self, src_fs: Optional[AbstractFileSystem] = None,
                  dest_fs: Optional[AbstractFileSystem] = None):
